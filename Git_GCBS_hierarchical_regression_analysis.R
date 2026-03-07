@@ -25,3 +25,13 @@
 #      to conspiratorial narratives compared to older cohorts with 
 #      crystallized media literacy (H3).
 
+# Data Source: Open Psychometrics GCBS dataset (2016)
+# Sample:     Adults who completed online GCBS and agreed to research use
+#
+# Key Analytical Features:
+#   1. Hierarchical multiple regression (4 blocks)
+#   2. Suppression effects detection and interpretation
+#   3. Relative importance analysis (dominance analysis)
+#   4. Comprehensive assumption checking
+#   5. Robustness testing across subgroups
+
