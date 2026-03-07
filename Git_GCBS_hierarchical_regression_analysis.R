@@ -35,3 +35,14 @@
 #   4. Comprehensive assumption checking
 #   5. Robustness testing across subgroups
 
+
+# Ethics (Secondary Data):
+#   □ Data collected with informed consent (users opted in for research)
+#   □ All participants age 13+ (per codebook)
+#   □ No personally identifiable information in dataset
+#   □ Data publicly shared for research purposes
+
+#   Research Question: "To what extent do personality and cognitive factors 
+# provide incremental predictive value for conspiracy beliefs beyond baseline demographics, 
+# and how do cognitive variables suppress or attenuate these relationships?"
+
