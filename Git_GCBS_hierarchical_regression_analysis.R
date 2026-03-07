@@ -46,3 +46,13 @@
 # provide incremental predictive value for conspiracy beliefs beyond baseline demographics, 
 # and how do cognitive variables suppress or attenuate these relationships?"
 
+#   Hypotheses:
+#     H1a (Personality): Lower Agreeableness will be the strongest zero-order
+#          personality predictor of conspiracy beliefs.
+#     H1b (Suppression): Openness to Experience will demonstrate a positive
+#          predictive effect only after controlling for cognitive variables.
+#     H2  (Cognitive Mediation): Educational attainment will show a negative
+#          association with conspiracy beliefs, significantly attenuated when
+#          Vocabulary Knowledge is included.
+#     H3  (Age-Linear): Age will demonstrate a significant negative linear
+#          relationship with conspiracy beliefs.
