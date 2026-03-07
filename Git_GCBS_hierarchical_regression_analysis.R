@@ -56,3 +56,9 @@
 #          Vocabulary Knowledge is included.
 #     H3  (Age-Linear): Age will demonstrate a significant negative linear
 #          relationship with conspiracy beliefs.
+#   Analysis Plan:
+#     - Hierarchical regression (4 blocks: demographics, personality, cognitive, social)
+#     - Alpha = .05, two-tailed tests
+#     - Outliers defined as Cook's D > 4/n
+#     - Missing data: Listwise deletion (document n at each stage)
+#     - Effect sizes: R², ΔR², semi-partial r²
