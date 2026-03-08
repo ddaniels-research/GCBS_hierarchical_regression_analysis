@@ -259,3 +259,15 @@ print(session_start)
 sink()
 
 log_step("Session info captured in documentation/session_info_start.txt")
+# STEP 2: DATA IMPORT & INITIAL EXPLORATION
+
+# ---- 2.1 Import Data ----
+# Dataset: GCBS from Open Psychometrics (2016, online administration)
+
+gcbs_raw <- read_csv(
+  here("data", "raw", "data.csv"),
+  na = c("", "NA", "N/A", "NULL")
+)
+
+import_timestamp <- Sys.time()
+log_step(paste("Data imported at:", format(import_timestamp)))
