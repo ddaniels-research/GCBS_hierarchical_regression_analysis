@@ -235,3 +235,17 @@ dirs <- c("data/raw", "data/processed", "output/tables", "output/figures",
 walk(dirs, ~ dir.create(here(.x), recursive = TRUE, showWarnings = FALSE))
 
 log_step("Directory structure created")
+
+# ---- 1.5 Global Options ----
+
+options(scipen = 999, digits = 4)
+set.seed(SEED)
+
+# Consistent publication-quality theme
+theme_set(theme_minimal(base_size = 12) +
+            theme(
+              plot.title    = element_text(face = "bold", size = 14),
+              plot.subtitle = element_text(size = 11),
+              axis.title    = element_text(face = "bold"),
+              legend.position = "bottom"
+            ))
