@@ -259,6 +259,7 @@ print(session_start)
 sink()
 
 log_step("Session info captured in documentation/session_info_start.txt")
+
 # STEP 2: DATA IMPORT & INITIAL EXPLORATION
 
 # ---- 2.1 Import Data ----
