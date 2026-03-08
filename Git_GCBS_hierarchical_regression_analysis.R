@@ -90,3 +90,77 @@ MULTICOLLINEARITY_R     <- 0.70    # Predictor correlation concern threshold
 VIF_MODERATE            <- 5
 VIF_SEVERE              <- 10
 
+# ---- 1.2 Helper Functions ----
+
+hr <- function(char = "=", width = 70) {
+  cat(strrep(char, width), "\n")
+}
+
+log_step <- function(msg) {
+  cat(paste0("✓ ", msg, "\n"))
+}
+
+format_p <- function(p, digits = 3) {
+  format.pval(p, digits = digits)
+}
+
+#' Print model fit statistics consistently
+print_model_fit <- function(model_summary, prev_summary = NULL) {
+  cat("  R²     =", round(model_summary$r.squared, 4), "\n")
+  cat("  Adj R² =", round(model_summary$adj.r.squared, 4), "\n")
+  if (!is.null(prev_summary)) {
+    cat("  ΔR²    =", round(model_summary$r.squared - prev_summary$r.squared, 4), "\n")
+  }
+  f <- model_summary$fstatistic
+  p <- pf(f[1], f[2], f[3], lower.tail = FALSE)
+  cat(sprintf("  F(%g, %g) = %.2f, p = %s\n", f[2], f[3], f[1], format_p(p)))
+}
+
+#' Print ΔR² F-change test from anova comparison
+print_f_change <- function(anova_result) {
+  cat(sprintf("  F change(%g, %g) = %.2f, p = %s\n",
+              anova_result$Df[2], anova_result$Res.Df[2],
+              round(anova_result$F[2], 2),
+              format_p(anova_result$`Pr(>F)`[2])))
+}
+
+#' Create boxplot of GCBS by a categorical variable
+make_boxplot <- function(data, x_var, fill_color, title) {
+  ggplot(data, aes(x = .data[[x_var]], y = gcbs_total)) +
+    geom_boxplot(fill = fill_color, alpha = 0.7) +
+    geom_jitter(alpha = 0.1, width = 0.2) +
+    labs(title = title, x = NULL, y = "GCBS Score") +
+    theme_minimal()
+}
+
+#' Print frequency table for a categorical variable
+describe_categorical <- function(data, var, label) {
+  cat(paste0("\n", label, ":\n"))
+  tbl <- table(data[[var]], useNA = "ifany")
+  print(tbl)
+  cat("Proportions (%):\n")
+  print(round(prop.table(tbl) * 100, 1))
+}
+
+#' Build regression formula from DV and predictor vector
+build_formula <- function(dv, predictors) {
+  reformulate(predictors, response = dv)
+}
+
+# Predictor display labels (single source of truth for all tables and plots)
+predictor_labels <- c(
+  gcbs_total          = "Conspiracy Beliefs (GCBS)",
+  age                 = "Age (years)",
+  gender              = "Gender (0=M, 1=F)",
+  education_num       = "Education",
+  urban_num           = "Urban Background",
+  english_native_num  = "English Non-Native",
+  extraversion        = "Extraversion (TIPI)",
+  agreeableness       = "Agreeableness (TIPI)",
+  conscientiousness   = "Conscientiousness (TIPI)",
+  emotional_stability = "Emotional Stability (TIPI)",
+  openness            = "Openness (TIPI)",
+  vocab_score         = "Vocabulary Knowledge",
+  currently_married   = "Currently Married",
+  familysize          = "Family Size"
+)
