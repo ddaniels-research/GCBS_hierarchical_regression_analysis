@@ -224,3 +224,14 @@ library(kableExtra)
 library(apaTables)
 library(naniar)
 library(mice)
+
+# Anchor here() to this script's location
+here::i_am("Git_GCBS_hierarchical_regression_analysis.R")
+
+# ---- 1.4 Directory Structure ----
+
+dirs <- c("data/raw", "data/processed", "output/tables", "output/figures",
+          "output/models", "scripts", "documentation")
+walk(dirs, ~ dir.create(here(.x), recursive = TRUE, showWarnings = FALSE))
+
+log_step("Directory structure created")
