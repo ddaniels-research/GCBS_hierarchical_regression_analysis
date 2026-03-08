@@ -249,3 +249,12 @@ theme_set(theme_minimal(base_size = 12) +
               axis.title    = element_text(face = "bold"),
               legend.position = "bottom"
             ))
+
+# ---- 1.6 Session Info (Start) ----
+
+session_start <- sessionInfo()
+sink(here("documentation", "session_info_start.txt"))
+print(session_start)
+sink()
+
+log_step("Session info captured in documentation/session_info_start.txt")
