@@ -73,7 +73,7 @@
 
 # STEP 1: PROJECT SETUP & CONFIGURATION
 
-# 1.1 Analysis Parameters
+# ---- 1.1 Analysis Parameters ----
 # Consolidate all decision thresholds here for transparency and easy sensitivity checks
 
 SEED                    <- 42
