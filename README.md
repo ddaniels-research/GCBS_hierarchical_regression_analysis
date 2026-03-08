@@ -25,7 +25,7 @@ The core of this project relies on a 4-block Hierarchical Multiple Regression, s
 * **Block 4 (Social):** Marital status, family size.
 
 **Key Analytical Features in the Script:**
-* Comprehensive psychometric validation (Cronbach's $\alpha$, McDonald's $\omega$).
+* Comprehensive psychometric validation (Cronbach's alpha, McDonald's omega).
 * Classical suppression effect testing.
 * Relative importance analysis (Dominance Analysis via the LMG metric).
 * Robust assumption checking and sensitivity analyses (Cook's D, DFFITS, HC3 robust standard errors).
