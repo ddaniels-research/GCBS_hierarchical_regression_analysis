@@ -164,3 +164,74 @@ predictor_labels <- c(
   currently_married   = "Currently Married",
   familysize          = "Family Size"
 )
+
+# ---- 1.3 Install and Load Packages ----
+
+install_if_needed <- function(packages) {
+  new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
+  if (length(new_packages)) install.packages(new_packages, dependencies = TRUE)
+}
+
+required_packages <- c(
+  # Core data manipulation & workflow
+  "here",           # Reproducible file paths
+  "tidyverse",      # Data manipulation (dplyr, ggplot2, tidyr, readr, etc.)
+  
+  # Psychometrics & scale reliability
+  "psych",          # Psychological research tools: alpha(), describe()
+  
+  # Statistical modeling & diagnostics
+  "car",            # Companion to Applied Regression: VIF, diagnostic tests
+  "lmtest",         # Linear model diagnostic tests (Breusch-Pagan, etc.)
+  "lm.beta",        # Standardized regression coefficients
+  "sandwich",       # Robust (heteroscedasticity-consistent) standard errors
+  
+  # Effect sizes
+  "effectsize",     # Comprehensive effect size calculations
+  
+  # Visualization
+  "ggcorrplot",     # Correlation matrix plots
+  "ggfortify",      # Extends ggplot2 for model diagnostic plots
+  "patchwork",      # Combine multiple plots
+  
+  # Tables & reporting
+  "knitr",          # Table formatting
+  "kableExtra",     # Enhanced table styling
+  "apaTables",      # APA-formatted tables
+  
+  # Missing data
+  "naniar",         # Missing data visualization
+  "mice"            # Multiple imputation (available if needed)
+)
+
+install_if_needed(required_packages)
+
+# Install relaimpo: try CRAN first, fall back to archived version
+if (!"relaimpo" %in% installed.packages()[, "Package"]) {
+  tryCatch(
+    install.packages("relaimpo"),
+    error = function(e) {
+      message("CRAN install failed; trying archived version...")
+      url <- "https://cran.r-project.org/src/contrib/Archive/relaimpo/relaimpo_2.2-3.tar.gz"
+      install.packages(url, repos = NULL, type = "source")
+    }
+  )
+}
+
+library(here)
+library(tidyverse)
+library(psych)
+library(car)
+library(lmtest)
+library(lm.beta)
+library(sandwich)
+library(effectsize)
+library(relaimpo)
+library(ggcorrplot)
+library(ggfortify)
+library(patchwork)
+library(knitr)
+library(kableExtra)
+library(apaTables)
+library(naniar)
+library(mice)
