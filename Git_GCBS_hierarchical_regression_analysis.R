@@ -185,6 +185,7 @@ required_packages <- c(
   "lmtest",         # Linear model diagnostic tests (Breusch-Pagan, etc.)
   "lm.beta",        # Standardized regression coefficients
   "sandwich",       # Robust (heteroscedasticity-consistent) standard errors
+  "relaimpo",       # Relative importance of predictors in regression models
   
   # Effect sizes
   "effectsize",     # Comprehensive effect size calculations
@@ -205,18 +206,6 @@ required_packages <- c(
 )
 
 install_if_needed(required_packages)
-
-# Install relaimpo: try CRAN first, fall back to archived version
-if (!"relaimpo" %in% installed.packages()[, "Package"]) {
-  tryCatch(
-    install.packages("relaimpo"),
-    error = function(e) {
-      message("CRAN install failed; trying archived version...")
-      url <- "https://cran.r-project.org/src/contrib/Archive/relaimpo/relaimpo_2.2-3.tar.gz"
-      install.packages(url, repos = NULL, type = "source")
-    }
-  )
-}
 
 library(here)
 library(tidyverse)
