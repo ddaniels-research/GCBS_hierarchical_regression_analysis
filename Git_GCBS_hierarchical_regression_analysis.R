@@ -166,3 +166,96 @@ predictor_labels <- c(
   familysize          = "Family Size"
 )
 
+# ---- 1.3 Install and Load Packages ----
+
+install_if_needed <- function(packages) {
+  new_packages <- packages[!(packages %in% installed.packages()[, "Package"])]
+  if (length(new_packages)) install.packages(new_packages, dependencies = TRUE)
+}
+
+required_packages <- c(
+  # Core data manipulation & workflow
+  "here",           # Reproducible file paths
+  "tidyverse",      # Data manipulation (dplyr, ggplot2, tidyr, readr, etc.)
+  
+  # Psychometrics & scale reliability
+  "psych",          # Psychological research tools: alpha(), describe()
+  
+  # Statistical modeling & diagnostics
+  "car",            # Companion to Applied Regression: VIF, diagnostic tests
+  "lmtest",         # Linear model diagnostic tests (Breusch-Pagan, etc.)
+  "lm.beta",        # Standardized regression coefficients
+  "sandwich",       # Robust (heteroscedasticity-consistent) standard errors
+  "relaimpo",       # Relative importance of predictors in regression models
+  
+  # Effect sizes
+  "effectsize",     # Comprehensive effect size calculations
+  
+  # Visualization
+  "ggcorrplot",     # Correlation matrix plots
+  "ggfortify",      # Extends ggplot2 for model diagnostic plots
+  "patchwork",      # Combine multiple plots
+  
+  # Tables & reporting
+  "knitr",          # Table formatting
+  "kableExtra",     # Enhanced table styling
+  "apaTables",      # APA-formatted tables
+  
+  # Missing data
+  "naniar",         # Missing data visualization
+  "mice"            # Multiple imputation (available if needed)
+)
+
+install_if_needed(required_packages)
+
+library(here)
+library(tidyverse)
+library(psych)
+library(car)
+library(lmtest)
+library(lm.beta)
+library(sandwich)
+library(effectsize)
+library(relaimpo)
+library(ggcorrplot)
+library(ggfortify)
+library(patchwork)
+library(knitr)
+library(kableExtra)
+library(apaTables)
+library(naniar)
+library(mice)
+
+# Anchor here() to this script's location
+here::i_am("Git_GCBS_hierarchical_regression_analysis.R")
+
+# ---- 1.4 Directory Structure ----
+
+dirs <- c("data/raw", "data/processed", "output/tables", "output/figures",
+          "output/models", "scripts", "documentation")
+walk(dirs, ~ dir.create(here(.x), recursive = TRUE, showWarnings = FALSE))
+
+log_step("Directory structure created")
+
+# ---- 1.5 Global Options ----
+
+options(scipen = 999, digits = 4)
+set.seed(SEED)
+
+# Consistent publication-quality theme
+theme_set(theme_minimal(base_size = 12) +
+            theme(
+              plot.title    = element_text(face = "bold", size = 14),
+              plot.subtitle = element_text(size = 11),
+              axis.title    = element_text(face = "bold"),
+              legend.position = "bottom"
+            ))
+
+# ---- 1.6 Session Info (Start) ----
+
+session_start <- sessionInfo()
+sink(here("documentation", "session_info_start.txt"))
+print(session_start)
+sink()
+
+log_step("Session info captured in documentation/session_info_start.txt")
