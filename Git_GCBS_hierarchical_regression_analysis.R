@@ -271,3 +271,25 @@ gcbs_raw <- read_csv(
 
 import_timestamp <- Sys.time()
 log_step(paste("Data imported at:", format(import_timestamp)))
+
+# ---- 2.2 Initial Inspection ----
+
+# First 6 rows
+print(head(gcbs_raw))
+
+# Dataset Dimensions
+cat("Rows:", nrow(gcbs_raw), "| Columns:", ncol(gcbs_raw), "\n")
+
+# Variable Structure
+print(str(gcbs_raw, give.attr = FALSE))
+
+# Quick Summary
+print(summary(gcbs_raw))
+
+# Check for entirely empty variables
+empty_vars <- sapply(gcbs_raw, function(x) all(is.na(x)))
+if (any(empty_vars)) {
+  cat("\n⚠ WARNING: Completely empty variables:", names(gcbs_raw)[empty_vars], "\n")
+} else {
+  log_step("No completely empty variables detected")
+}
