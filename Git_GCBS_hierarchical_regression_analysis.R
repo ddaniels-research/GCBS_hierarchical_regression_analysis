@@ -78,7 +78,8 @@
 # Consolidate all decision thresholds here for transparency and easy sensitivity checks
 
 SEED                    <- 42
-RAPID_RESPONSE_SD       <- 2       # Flag respondents faster than M - 2*SD
+RAPID_RESPONSE_IQR_MULT <- 1.5     # Tukey lower-fence multiplier for response time
+RAPID_RESPONSE_FLOOR    <- 30      # Absolute minimum plausible completion time (seconds)
 GCBS_MIN_ITEMS          <- 12      # Require 80% of 15 items for valid score
 FAKE_WORD_THRESHOLD     <- 2       # Exclude if ≥ this many fake words endorsed
 AGE_RANGE               <- c(13, 100)  # Valid age bounds
