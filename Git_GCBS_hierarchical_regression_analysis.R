@@ -502,3 +502,23 @@ gcbs_clean <- gcbs_clean %>%
   )
 
 log_step("Categorical variables recoded")
+
+# 3.4.3 Collapse religion (12 categories → 4)
+gcbs_clean <- gcbs_clean %>%
+  mutate(
+    religion_detailed = factor(religion, levels = 1:12,
+                               labels = c("Agnostic", "Atheist", "Buddhist",
+                                          "Catholic", "Mormon", "Protestant",
+                                          "Christian Other", "Hindu", "Jewish",
+                                          "Muslim", "Sikh", "Other")),
+    religion_collapsed = case_when(
+      religion %in% c(1, 2)          ~ "Non-religious",
+      religion %in% c(4, 5, 6, 7)    ~ "Christian",
+      religion %in% c(3, 8, 9, 10, 11) ~ "Other religion",
+      religion == 12                  ~ "Other",
+      TRUE                            ~ NA_character_
+    ) %>% factor(levels = c("Non-religious", "Christian", "Other religion", "Other"))
+  )
+
+cat("\nReligion (collapsed):\n")
+print(table(gcbs_clean$religion_collapsed, useNA = "ifany"))
