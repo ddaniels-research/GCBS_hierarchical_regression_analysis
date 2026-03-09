@@ -460,3 +460,19 @@ tipi_summary <- gcbs_clean %>%
 
 cat("\nTIPI Summary:\n")
 print(tipi_summary)
+
+# ---- 3.4 Additional Predictor Variables ----
+
+# 3.4.1 Vocabulary score (real words only, excluding fakes VCL6/9/12)
+real_words <- paste0("VCL", c(1:5, 7:8, 10:11, 13:16))
+
+gcbs_clean <- gcbs_clean %>%
+  mutate(
+    vocab_score       = rowSums(pick(all_of(real_words)), na.rm = TRUE),
+    vocab_total_items = rowSums(!is.na(pick(all_of(real_words))))
+  )
+
+cat("\n=== Vocabulary Score ===\n")
+cat("Real words:", length(real_words), "| Range:",
+    range(gcbs_clean$vocab_score, na.rm = TRUE), "\n")
+cat("M =", round(mean(gcbs_clean$vocab_score, na.rm = TRUE), 2), "\n")
