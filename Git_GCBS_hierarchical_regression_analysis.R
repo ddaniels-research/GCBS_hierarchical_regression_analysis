@@ -318,6 +318,7 @@ if (any(empty_vars)) {
 #   voted: 1=Yes, 2=No | married: 1=Never, 2=Currently, 3=Previously
 #   familysize: Number of children mother had (including respondent)
 #   religion: 1-12 (see codebook) | race: coding issues noted in codebook
+
 # ---- 2.4 Missing Data Overview ----
 
 # Missing Data Overview
