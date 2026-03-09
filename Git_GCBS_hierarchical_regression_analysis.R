@@ -548,3 +548,32 @@ cat("N =", n_final, sprintf("(%.1f%% of raw)\n", n_final / nrow(gcbs_raw) * 100)
 
 write_csv(gcbs_analysis, here("data", "processed", "gcbs_analysis_ready.csv"))
 log_step("Analysis-ready dataset saved")
+
+# ---- 3.6 Document Cleaning Decisions ----
+
+cleaning_summary <- tibble(
+  Step = c("Raw data imported",
+           "Removed: Failed vocabulary check",
+           "Removed: Invalid age",
+           "Removed: Rapid responding",
+           "Removed: Insufficient GCBS items",
+           "Final analysis sample"),
+  N_Affected = c(NA,
+                 sum(gcbs_clean$invalid_vocabulary, na.rm = TRUE),
+                 sum(gcbs_clean$invalid_age, na.rm = TRUE),
+                 sum(gcbs_clean$rapid_responding, na.rm = TRUE),
+                 sum(!gcbs_clean$gcbs_valid[gcbs_clean$valid_case], na.rm = TRUE),
+                 NA),
+  N_Remaining = c(nrow(gcbs_raw),
+                  nrow(gcbs_raw) - sum(gcbs_clean$invalid_vocabulary, na.rm = TRUE),
+                  nrow(gcbs_raw) - sum(gcbs_clean$invalid_age, na.rm = TRUE),
+                  nrow(gcbs_raw) - sum(gcbs_clean$rapid_responding, na.rm = TRUE),
+                  sum(gcbs_clean$gcbs_valid[gcbs_clean$valid_case], na.rm = TRUE),
+                  n_final),
+  Note = c("", "≥2 fake words endorsed", "Outside 13–100 or missing",
+           "< Tukey lower fence (Med−1.5×IQR) or 30s floor", "< 12 of 15 items",
+           "Exclusions applied simultaneously; rows are not sequential")
+)
+
+write_csv(cleaning_summary, here("output", "tables", "01_data_cleaning_flowchart.csv"))
+log_step("Cleaning summary saved")
