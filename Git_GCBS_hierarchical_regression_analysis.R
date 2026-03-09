@@ -318,3 +318,34 @@ if (any(empty_vars)) {
 #   voted: 1=Yes, 2=No | married: 1=Never, 2=Currently, 3=Previously
 #   familysize: Number of children mother had (including respondent)
 #   religion: 1-12 (see codebook) | race: coding issues noted in codebook
+# ---- 2.4 Missing Data Overview ----
+
+# Missing Data Overview
+
+missing_summary <- gcbs_raw %>%
+  summarise(across(everything(), ~ sum(is.na(.)))) %>%
+  pivot_longer(everything(), names_to = "variable", values_to = "n_missing") %>%
+  mutate(pct_missing = (n_missing / nrow(gcbs_raw)) * 100) %>%
+  arrange(desc(pct_missing))
+
+high_missing <- missing_summary %>% filter(pct_missing > 5)
+if (nrow(high_missing) > 0) {
+  cat("\n⚠ Variables with >5% missing:\n")
+  print(high_missing, n = Inf)
+} else {
+  log_step("No variables have >5% missing data")
+}
+
+# Missing data visualization
+missing_plot <- gg_miss_var(gcbs_raw, show_pct = TRUE) +
+  labs(title = "Missing Data by Variable",
+       subtitle = paste("Dataset:", nrow(gcbs_raw), "cases"),
+       x = "Variable", y = "Number Missing")
+
+ggsave(here("output", "figures", "01_missing_data_overview.png"),
+       missing_plot, width = 10, height = 8, dpi = 300)
+log_step("Missing data visualization saved")
+
+miss_case_result <- miss_case_summary(gcbs_raw)
+cat("\nPer-case missingness summary:\n")
+print(summary(miss_case_result$n_miss))
