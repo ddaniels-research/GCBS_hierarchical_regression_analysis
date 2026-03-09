@@ -476,3 +476,29 @@ cat("\n=== Vocabulary Score ===\n")
 cat("Real words:", length(real_words), "| Range:",
     range(gcbs_clean$vocab_score, na.rm = TRUE), "\n")
 cat("M =", round(mean(gcbs_clean$vocab_score, na.rm = TRUE), 2), "\n")
+
+# 3.4.2 Recode categorical variables
+gcbs_clean <- gcbs_clean %>%
+  mutate(
+    education_factor = factor(education, levels = 1:4, ordered = TRUE,
+                              labels = c("Less than HS", "High School", 
+                                         "University", "Graduate")),
+    education_num = as.numeric(education),
+    
+    gender_factor = factor(gender, levels = 1:3,
+                           labels = c("Male", "Female", "Other")),
+    
+    urban_factor = factor(urban, levels = 1:3, ordered = TRUE,
+                          labels = c("Rural", "Suburban", "Urban")),
+    urban_num = as.numeric(urban),
+    
+    english_native = factor(engnat, levels = 1:2, labels = c("Yes", "No")),
+    
+    voted_factor = factor(voted, levels = 1:2, labels = c("Yes", "No")),
+    
+    married_factor = factor(married, levels = 1:3,
+                            labels = c("Never", "Currently", "Previously")),
+    currently_married = ifelse(married == 2, 1, 0)
+  )
+
+log_step("Categorical variables recoded")
