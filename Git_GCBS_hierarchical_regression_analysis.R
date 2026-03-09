@@ -373,3 +373,22 @@ gcbs_clean <- gcbs_clean %>%
 
 cat("\n=== Age Validity ===\n")
 cat("Invalid age cases:", sum(gcbs_clean$invalid_age, na.rm = TRUE), "\n")
+
+# ---- 3.1.3 Rapid responding (Robust Version) ----
+time_median <- median(gcbs_clean$testelapse, na.rm = TRUE)
+time_iqr    <- IQR(gcbs_clean$testelapse, na.rm = TRUE)
+
+# Tukey's Outlier Filter (Lower Bound)
+time_cutoff  <- time_median - (RAPID_RESPONSE_IQR_MULT * time_iqr)
+
+# Ensure cutoff isn't lower than a "humanly possible" minimum (e.g., 30s)
+final_cutoff <- max(time_cutoff, RAPID_RESPONSE_FLOOR)
+
+gcbs_clean <- gcbs_clean %>%
+  mutate(rapid_responding = testelapse < final_cutoff | is.na(testelapse))
+
+cat("\n=== Response Time Validity ===\n")
+cat("Median:", round(time_median, 1), "s | IQR:", round(time_iqr, 1), "s\n")
+cat("Calculated Bound (Med - 1.5*IQR):", round(time_cutoff, 1), "s\n")
+cat("Applied Cutoff (Max of bound or 30s):", round(final_cutoff, 1), "s\n")
+cat("Flagged as too fast:", sum(gcbs_clean$rapid_responding, na.rm = TRUE), "\n")
