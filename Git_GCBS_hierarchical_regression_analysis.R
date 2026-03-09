@@ -577,3 +577,33 @@ cleaning_summary <- tibble(
 
 write_csv(cleaning_summary, here("output", "tables", "01_data_cleaning_flowchart.csv"))
 log_step("Cleaning summary saved")
+
+# STEP 4: DESCRIPTIVE STATISTICS & VISUALIZATION
+
+cat("\n=== DESCRIPTIVE STATISTICS ===\n\n")
+
+# ---- 4.1 DV: GCBS ----
+
+cat("DEPENDENT VARIABLE: Conspiracy Beliefs (GCBS)\n")
+hr("-", 50)
+
+gcbs_desc <- gcbs_analysis %>%
+  summarise(
+    n        = sum(!is.na(gcbs_total)),
+    Mean     = mean(gcbs_total, na.rm = TRUE),
+    SD       = sd(gcbs_total, na.rm = TRUE),
+    Median   = median(gcbs_total, na.rm = TRUE),
+    Min      = min(gcbs_total, na.rm = TRUE),
+    Max      = max(gcbs_total, na.rm = TRUE),
+    Skewness = psych::skew(gcbs_total, na.rm = TRUE),
+    Kurtosis = psych::kurtosi(gcbs_total, na.rm = TRUE),
+    SE       = SD / sqrt(n),
+    CI_lower = Mean - 1.96 * SE,
+    CI_upper = Mean + 1.96 * SE
+  )
+print(gcbs_desc)
+
+cat("Skewness:", ifelse(abs(gcbs_desc$Skewness) < 0.5, "Minimal",
+                        ifelse(abs(gcbs_desc$Skewness) < 1, "Moderate", "Severe")), "\n")
+cat("Kurtosis:", ifelse(abs(gcbs_desc$Kurtosis) < 0.5, "Minimal",
+                        ifelse(abs(gcbs_desc$Kurtosis) < 1, "Moderate", "Severe")), "\n")
