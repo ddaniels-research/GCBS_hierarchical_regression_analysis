@@ -402,3 +402,34 @@ cat("\n=== Overall Validity ===\n")
 cat("Raw N:", nrow(gcbs_raw), "| Excluded:", n_excluded,
     sprintf("(%.2f%%) | Valid:", n_excluded / nrow(gcbs_raw) * 100),
     sum(gcbs_clean$valid_case, na.rm = TRUE), "\n")
+
+# ---- 3.2 Score GCBS (Dependent Variable) ----
+# Brotherton et al. (2013): 15 items, mean score, 1–5 scale
+
+gcbs_items <- paste0("Q", 1:15)
+
+# Verify all items exist
+missing_items <- gcbs_items[!gcbs_items %in% names(gcbs_clean)]
+if (length(missing_items) > 0) {
+  stop("Missing GCBS items: ", paste(missing_items, collapse = ", "))
+}
+
+# Recode invalid zeros as NA (1–5 scale; zeros are data entry errors)
+n_zeros <- sum(gcbs_raw[gcbs_items] == 0, na.rm = TRUE)
+gcbs_clean <- gcbs_clean %>%
+  mutate(across(all_of(gcbs_items), ~ na_if(.x, 0)))
+cat("\nRecoded", n_zeros, "zero values to NA (invalid on 1-5 scale)\n")
+
+# Calculate mean score, requiring ≥80% item completion
+gcbs_clean <- gcbs_clean %>%
+  mutate(
+    gcbs_total  = rowMeans(pick(all_of(gcbs_items)), na.rm = TRUE),
+    gcbs_n_items = rowSums(!is.na(pick(all_of(gcbs_items)))),
+    gcbs_valid   = gcbs_n_items >= GCBS_MIN_ITEMS
+  )
+
+cat("\n=== GCBS Scoring ===\n")
+cat("Valid scores (≥", GCBS_MIN_ITEMS, "items):", sum(gcbs_clean$gcbs_valid), "\n")
+cat("Range:", round(range(gcbs_clean$gcbs_total, na.rm = TRUE), 2), "\n")
+cat("M =", round(mean(gcbs_clean$gcbs_total, na.rm = TRUE), 2),
+    "| SD =", round(sd(gcbs_clean$gcbs_total, na.rm = TRUE), 2), "\n")
