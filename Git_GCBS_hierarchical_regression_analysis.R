@@ -351,3 +351,18 @@ log_step("Missing data visualization saved")
 miss_case_result <- miss_case_summary(gcbs_raw)
 cat("\nPer-case missingness summary:\n")
 print(summary(miss_case_result$n_miss))
+# STEP 3: DATA CLEANING & PREPARATION
+
+# ---- 3.1 Validity Screening ----
+
+# 3.1.1 Vocabulary check: flag participants endorsing ≥2 fake words (VCL6, VCL9, VCL12)
+gcbs_clean <- gcbs_raw %>%
+  mutate(
+    fake_words_checked = rowSums(pick(VCL6, VCL9, VCL12), na.rm = TRUE),
+    invalid_vocabulary = fake_words_checked >= FAKE_WORD_THRESHOLD
+  )
+
+n_invalid_vocab <- sum(gcbs_clean$invalid_vocabulary, na.rm = TRUE)
+cat("\n=== Vocabulary Validity ===\n")
+cat("Cases endorsing ≥2 fake words:", n_invalid_vocab,
+    sprintf("(%.2f%%)\n", n_invalid_vocab / nrow(gcbs_clean) * 100))
