@@ -392,3 +392,13 @@ cat("Median:", round(time_median, 1), "s | IQR:", round(time_iqr, 1), "s\n")
 cat("Calculated Bound (Med - 1.5*IQR):", round(time_cutoff, 1), "s\n")
 cat("Applied Cutoff (Max of bound or 30s):", round(final_cutoff, 1), "s\n")
 cat("Flagged as too fast:", sum(gcbs_clean$rapid_responding, na.rm = TRUE), "\n")
+
+# 3.1.4 Combine all validity flags
+gcbs_clean <- gcbs_clean %>%
+  mutate(valid_case = !(invalid_vocabulary | invalid_age | rapid_responding))
+
+n_excluded <- sum(!gcbs_clean$valid_case, na.rm = TRUE)
+cat("\n=== Overall Validity ===\n")
+cat("Raw N:", nrow(gcbs_raw), "| Excluded:", n_excluded,
+    sprintf("(%.2f%%) | Valid:", n_excluded / nrow(gcbs_raw) * 100),
+    sum(gcbs_clean$valid_case, na.rm = TRUE), "\n")
