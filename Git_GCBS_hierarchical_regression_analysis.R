@@ -433,3 +433,30 @@ cat("Valid scores (≥", GCBS_MIN_ITEMS, "items):", sum(gcbs_clean$gcbs_valid), 
 cat("Range:", round(range(gcbs_clean$gcbs_total, na.rm = TRUE), 2), "\n")
 cat("M =", round(mean(gcbs_clean$gcbs_total, na.rm = TRUE), 2),
     "| SD =", round(sd(gcbs_clean$gcbs_total, na.rm = TRUE), 2), "\n")
+
+# ---- 3.3 Score Big Five (TIPI) ----
+# Gosling et al. (2003): 2 items per dimension, one reverse-scored (8 - x)
+
+gcbs_clean <- gcbs_clean %>%
+  mutate(
+    extraversion        = (TIPI1 + (8 - TIPI6)) / 2,
+    agreeableness       = ((8 - TIPI2) + TIPI7) / 2,
+    conscientiousness   = (TIPI3 + (8 - TIPI8)) / 2,
+    emotional_stability = ((8 - TIPI4) + TIPI9) / 2,
+    openness            = (TIPI5 + (8 - TIPI10)) / 2
+  )
+
+log_step("TIPI dimensions calculated")
+
+tipi_summary <- gcbs_clean %>%
+  summarise(
+    across(c(extraversion, agreeableness, conscientiousness, 
+             emotional_stability, openness),
+           list(mean = ~ mean(., na.rm = TRUE), sd = ~ sd(., na.rm = TRUE)))
+  ) %>%
+  pivot_longer(everything(), names_to = "stat", values_to = "value") %>%
+  separate(stat, into = c("dimension", "statistic"), sep = "_(?=[^_]+$)") %>%
+  pivot_wider(names_from = statistic, values_from = value)
+
+cat("\nTIPI Summary:\n")
+print(tipi_summary)
