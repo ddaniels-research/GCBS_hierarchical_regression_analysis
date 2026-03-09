@@ -366,3 +366,10 @@ n_invalid_vocab <- sum(gcbs_clean$invalid_vocabulary, na.rm = TRUE)
 cat("\n=== Vocabulary Validity ===\n")
 cat("Cases endorsing ≥2 fake words:", n_invalid_vocab,
     sprintf("(%.2f%%)\n", n_invalid_vocab / nrow(gcbs_clean) * 100))
+
+# 3.1.2 Age validity: exclude implausible ages or missing
+gcbs_clean <- gcbs_clean %>%
+  mutate(invalid_age = age < AGE_RANGE[1] | age > AGE_RANGE[2] | is.na(age))
+
+cat("\n=== Age Validity ===\n")
+cat("Invalid age cases:", sum(gcbs_clean$invalid_age, na.rm = TRUE), "\n")
