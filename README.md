@@ -15,6 +15,7 @@ This project examines the personality, cognitive, and demographic predictors of 
 
 ## Data Source
 The data for this analysis comes from the **Generic Conspiracist Beliefs Scale (GCBS)** dataset, collected via online administration in 2016 by Open Psychometrics. 
+https://openpsychometrics.org/_rawdata/
 * *Note: The dataset contains no personally identifiable information, and all participants opted in for research use.*
 
 ## Methodology
