@@ -294,3 +294,27 @@ if (any(empty_vars)) {
 } else {
   log_step("No completely empty variables detected")
 }
+# ---- 2.3 Codebook Reference ----
+#
+# GCBS Items (DV):
+#   Q1-Q15: 15 items, 1 (definitely not true) to 5 (definitely true)
+#
+# Timing (Quality Checks):
+#   E1-E15: Time per GCBS item (sec); testelapse: total GCBS time
+#
+# TIPI (Big Five, 1–7 scale, two items per dimension, one reverse-scored):
+#   E: TIPI1 + (8-TIPI6)     A: (8-TIPI2) + TIPI7     C: TIPI3 + (8-TIPI8)
+#   ES: (8-TIPI4) + TIPI9    O: TIPI5 + (8-TIPI10)
+#
+# Vocabulary Check:
+#   VCL1-VCL16: Word knowledge (1=checked, 0=unchecked)
+#   VCL6, VCL9, VCL12 are FAKE WORDS for validity screening
+#
+# Demographics:
+#   education: 1=<HS, 2=HS, 3=University, 4=Graduate
+#   gender: 1=Male, 2=Female, 3=Other
+#   age: Years | engnat: 1=Native, 2=Not native
+#   urban: 1=Rural, 2=Suburban, 3=Urban
+#   voted: 1=Yes, 2=No | married: 1=Never, 2=Currently, 3=Previously
+#   familysize: Number of children mother had (including respondent)
+#   religion: 1-12 (see codebook) | race: coding issues noted in codebook
