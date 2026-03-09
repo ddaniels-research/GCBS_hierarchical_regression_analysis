@@ -522,3 +522,29 @@ gcbs_clean <- gcbs_clean %>%
 
 cat("\nReligion (collapsed):\n")
 print(table(gcbs_clean$religion_collapsed, useNA = "ifany"))
+
+# ---- 3.5 Create Analysis Dataset ----
+
+gcbs_analysis <- gcbs_clean %>%
+  filter(valid_case == TRUE, gcbs_valid == TRUE) %>%
+  dplyr::select(
+    gcbs_total,
+    extraversion, agreeableness, conscientiousness, emotional_stability, openness,
+    vocab_score,
+    age, gender, gender_factor,
+    education_num, education_factor,
+    urban_num, urban_factor,
+    english_native,
+    currently_married, married_factor,
+    familysize,
+    voted_factor,
+    religion_collapsed,
+    fake_words_checked, testelapse
+  )
+
+n_final <- nrow(gcbs_analysis)
+cat("\n=== Final Analysis Sample ===\n")
+cat("N =", n_final, sprintf("(%.1f%% of raw)\n", n_final / nrow(gcbs_raw) * 100))
+
+write_csv(gcbs_analysis, here("data", "processed", "gcbs_analysis_ready.csv"))
+log_step("Analysis-ready dataset saved")
