@@ -753,3 +753,34 @@ kable(desc_table, caption = "Table 1. Descriptive Statistics for Key Variables")
   save_kable(here("output", "tables", "02_descriptive_statistics.html"))
 
 log_step("Descriptive statistics table saved")
+
+# ---- STEP 5: SCALE RELIABILITY & PSYCHOMETRIC VALIDATION ----
+
+# GCBS RELIABILITY ANALYSIS
+
+# ---- 5.1 Internal Consistency ----
+
+gcbs_items_data <- gcbs_clean %>%
+  filter(valid_case == TRUE, gcbs_valid == TRUE) %>%
+  dplyr::select(all_of(gcbs_items))
+
+# Cronbach's alpha
+alpha_result <- psych::alpha(gcbs_items_data, check.keys = TRUE)
+
+cat("\n--- Cronbach's Alpha ---\n")
+cat("Raw α:", round(alpha_result$total$raw_alpha, 3), "\n")
+cat("Standardized α:", round(alpha_result$total$std.alpha, 3), "\n")
+
+# McDonald's omega (often more appropriate than alpha)
+omega_result <- psych::omega(gcbs_items_data, nfactors = 1, plot = FALSE)
+
+cat("\n--- McDonald's Omega ---\n")
+cat("ω total:", round(omega_result$omega.tot, 3), "\n")
+cat("ω hierarchical:", round(omega_result$omega_h, 3), "\n")
+
+alpha_val <- alpha_result$total$std.alpha
+cat("\nReliability is",
+    ifelse(alpha_val >= 0.90, "Excellent (α ≥ .90)",
+           ifelse(alpha_val >= 0.80, "Good (α ≥ .80)",
+                  ifelse(alpha_val >= 0.70, "Acceptable (α ≥ .70)",
+                         "Questionable (α < .70)"))), "\n")
