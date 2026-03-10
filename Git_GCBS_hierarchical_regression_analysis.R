@@ -694,3 +694,41 @@ personality_combined <- wrap_plots(personality_plots, ncol = 2) +
 ggsave(here("output", "figures", "03_personality_distributions.png"),
        personality_combined, width = 12, height = 10, dpi = 300)
 log_step("Personality distribution plots saved")
+
+# ---- 4.5 Bivariate Relationships ----
+
+# Scatterplots: continuous predictors vs GCBS
+scatter_plots <- map(continuous_vars, function(var) {
+  ggplot(gcbs_analysis, aes(x = .data[[var]], y = gcbs_total)) +
+    geom_point(alpha = 0.3, size = 1) +
+    geom_smooth(method = "lm", color = "blue", se = TRUE) +
+    geom_smooth(method = "loess", color = "red", se = FALSE, linetype = "dashed") +
+    labs(title = str_to_title(str_replace_all(var, "_", " ")),
+         x = str_to_title(str_replace_all(var, "_", " ")), y = "GCBS Score",
+         caption = "Blue = linear | Red = loess") +
+    theme_minimal(base_size = 9)
+})
+
+scatter_combined <- wrap_plots(scatter_plots, ncol = 3) +
+  plot_annotation(title = "Bivariate Relationships: Predictors vs Conspiracy Beliefs",
+                  subtitle = "Checking linearity assumptions",
+                  theme = theme(plot.title = element_text(size = 14, face = "bold")))
+
+ggsave(here("output", "figures", "04_bivariate_scatterplots.png"),
+       scatter_combined, width = 14, height = 10, dpi = 300)
+log_step("Bivariate relationship plots saved")
+
+# Boxplots: categorical predictors vs GCBS
+edu_box     <- make_boxplot(gcbs_analysis, "education_factor",  "lightblue",  "GCBS by Education")
+gender_box  <- make_boxplot(gcbs_analysis, "gender_factor",     "lightgreen", "GCBS by Gender")
+urban_box   <- make_boxplot(gcbs_analysis, "urban_factor",      "lightyellow","GCBS by Urban/Rural")
+religion_box <- make_boxplot(gcbs_analysis, "religion_collapsed","lightpink",  "GCBS by Religion") +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+categorical_combined <- (edu_box + gender_box) / (urban_box + religion_box) +
+  plot_annotation(title = "GCBS by Categorical Predictors",
+                  theme = theme(plot.title = element_text(size = 14, face = "bold")))
+
+ggsave(here("output", "figures", "05_categorical_predictors_boxplots.png"),
+       categorical_combined, width = 12, height = 10, dpi = 300)
+log_step("Categorical predictor plots saved")
