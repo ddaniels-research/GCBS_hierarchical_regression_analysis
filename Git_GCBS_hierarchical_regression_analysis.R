@@ -635,3 +635,62 @@ describe_categorical(gcbs_analysis, "urban_factor",      "Urban/Rural Background
 describe_categorical(gcbs_analysis, "english_native",    "English Native Speaker")
 describe_categorical(gcbs_analysis, "voted_factor",      "Voted in Past Year")
 describe_categorical(gcbs_analysis, "religion_collapsed", "Religion (Collapsed)")
+
+# ---- 4.4 Distribution Plots ----
+
+# DV distribution with normal overlay
+gcbs_dist_plot <- ggplot(gcbs_analysis, aes(x = gcbs_total)) +
+  geom_histogram(aes(y = after_stat(density)), bins = 30,
+                 fill = "steelblue", alpha = 0.7, color = "white") +
+  geom_density(color = "darkblue", linewidth = 1) +
+  stat_function(fun = dnorm,
+                args = list(mean = mean(gcbs_analysis$gcbs_total, na.rm = TRUE),
+                            sd = sd(gcbs_analysis$gcbs_total, na.rm = TRUE)),
+                color = "red", linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = mean(gcbs_total, na.rm = TRUE)),
+             color = "darkgreen", linetype = "dashed", linewidth = 1) +
+  geom_vline(aes(xintercept = median(gcbs_total, na.rm = TRUE)),
+             color = "orange", linetype = "dotted", linewidth = 1) +
+  labs(title = "Distribution of Conspiracy Beliefs (GCBS)",
+       subtitle = sprintf("N = %d | M = %.2f | SD = %.2f", n_final,
+                          mean(gcbs_analysis$gcbs_total, na.rm = TRUE),
+                          sd(gcbs_analysis$gcbs_total, na.rm = TRUE)),
+       x = "GCBS Total Score (1–5)", y = "Density",
+       caption = "Green dashed = mean | Orange dotted = median | Red dashed = normal") +
+  theme_minimal()
+
+gcbs_qq_plot <- ggplot(gcbs_analysis, aes(sample = gcbs_total)) +
+  stat_qq() + stat_qq_line(color = "red") +
+  labs(title = "Q-Q Plot: GCBS Normality", x = "Theoretical Quantiles",
+       y = "Sample Quantiles") +
+  theme_minimal()
+
+gcbs_dist_combined <- gcbs_dist_plot / gcbs_qq_plot +
+  plot_annotation(title = "Conspiracy Beliefs: Distribution Analysis",
+                  theme = theme(plot.title = element_text(size = 16, face = "bold")))
+
+ggsave(here("output", "figures", "02_gcbs_distribution.png"),
+       gcbs_dist_combined, width = 10, height = 10, dpi = 300)
+log_step("GCBS distribution plots saved")
+
+# Personality distributions
+personality_vars <- c("extraversion", "agreeableness", "conscientiousness",
+                      "emotional_stability", "openness")
+
+personality_plots <- map(personality_vars, function(var) {
+  ggplot(gcbs_analysis, aes(x = .data[[var]])) +
+    geom_histogram(aes(y = after_stat(density)), bins = 20, fill = "skyblue", 
+                   color = "white", alpha = 0.7) +
+    geom_density(color = "darkblue", linewidth = 1) +
+    labs(title = str_to_title(str_replace_all(var, "_", " ")),
+         x = "Score (1–7)", y = "Density") +
+    theme_minimal(base_size = 10)
+})
+
+personality_combined <- wrap_plots(personality_plots, ncol = 2) +
+  plot_annotation(title = "Big Five Personality Distributions (TIPI)",
+                  theme = theme(plot.title = element_text(size = 14, face = "bold")))
+
+ggsave(here("output", "figures", "03_personality_distributions.png"),
+       personality_combined, width = 12, height = 10, dpi = 300)
+log_step("Personality distribution plots saved")
