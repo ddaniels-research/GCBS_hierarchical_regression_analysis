@@ -799,13 +799,7 @@ print(item_total)
 
 problematic <- which(item_total$r.cor < 0.30)
 if (length(problematic) > 0) {
-<<<<<<< HEAD
   cat("\n Items with corrected r < .30:", names(problematic), "\n")
-} else {
-  log_step("All items show adequate item-total correlations (r ≥ .30)")
-}
-=======
-  cat("\n⚠ Items with corrected r < .30:", names(problematic), "\n")
 } else {
   log_step("All items show adequate item-total correlations (r ≥ .30)")
 }
@@ -821,7 +815,7 @@ print(alpha_if_deleted)
 
 max_improve <- max(alpha_if_deleted$std.alpha) - alpha_result$total$std.alpha
 if (max_improve > 0.02) {
-  cat("\n⚠ Consider removing:",
+  cat("\n Consider removing:",
       rownames(alpha_if_deleted)[which.max(alpha_if_deleted$std.alpha)],
       "(Δα =", round(max_improve, 3), ")\n")
 } else {
@@ -841,7 +835,7 @@ cat("Mean inter-item r:", round(mean_inter_item, 3),
 
 # ---- 5.5 Dimensionality Check ----
 
-cat("\n--- Dimensionality (Parallel Analysis) ---\n")
+# Dimensionality (Parallel Analysis)
 
 parallel <- psych::fa.parallel(gcbs_items_data, fm = "ml", fa = "both",
                                n.iter = 100, plot = FALSE)
@@ -850,7 +844,7 @@ cat("Suggested factors:", parallel$nfact, "| Components:", parallel$ncomp, "\n")
 if (parallel$nfact == 1) {
   log_step("GCBS appears unidimensional")
 } else {
-  cat("⚠ Multiple factors suggested — consider examining subscales\n")
+  cat("Multiple factors suggested — consider examining subscales\n")
 }
 
 # ---- 5.6 Save Reliability ----
@@ -926,7 +920,7 @@ high_cors <- which(abs(predictor_cors) > MULTICOLLINEARITY_R &
                      predictor_cors != 1, arr.ind = TRUE)
 
 if (nrow(high_cors) > 0) {
-  cat("⚠ HIGH CORRELATIONS (|r| >", MULTICOLLINEARITY_R, "):\n")
+  cat("HIGH CORRELATIONS (|r| >", MULTICOLLINEARITY_R, "):\n")
   high_cor_pairs <- data.frame(
     Var1 = rownames(predictor_cors)[high_cors[, 1]],
     Var2 = colnames(predictor_cors)[high_cors[, 2]],
@@ -1083,7 +1077,7 @@ cat("Regression N:", n_regression, "\n")
 if (n_regression >= min_n) {
   log_step(paste("Sample size adequate (n =", n_regression, "≥", min_n, ")"))
 } else {
-  cat("⚠ Sample size may be inadequate (n =", n_regression, "<", min_n, ")\n")
+  cat("Sample size may be inadequate (n =", n_regression, "<", min_n, ")\n")
 }
 
 # ---- 7.2 Build Hierarchical Models ----
@@ -1202,7 +1196,7 @@ h2_negative_effect <- edu_beta_model1 < 0 & edu_p_model1 < 0.05
 h2_attenuated      <- attenuation_pct > ATTENUATION_THRESHOLD
 h2_vocab_significant <- model3_summary$coefficients["vocab_score", "Pr(>|t|)"] < 0.05
 
-cat("--- H2 RESULT ---\n")
+# H2 RESULT
 cat("Negative education effect in Model 1:", h2_negative_effect, "\n")
 cat("Vocabulary significantly predicts GCBS:", h2_vocab_significant, "\n")
 cat(sprintf("Meaningful attenuation (>%d%%): %s (%.1f%%)\n",
@@ -1381,7 +1375,7 @@ suppressors <- model4_coefs %>%
   arrange(desc(abs(beta_minus_r)))
 
 if (nrow(suppressors) > 0) {
-  cat("⚡ SUPPRESSION EFFECTS DETECTED:\n\n")
+  cat("SUPPRESSION EFFECTS DETECTED:\n\n")
   print(suppressors %>% dplyr::select(Predictor, r, beta, beta_minus_r, p, sig))
 } else {
   log_step("No strong suppression effects detected")
@@ -1403,10 +1397,10 @@ vif_values <- car::vif(model4)
 print(round(vif_values, 2))
 
 if (any(vif_values > VIF_SEVERE)) {
-  cat("\n⚠ SEVERE multicollinearity (VIF > ", VIF_SEVERE, "):\n")
+  cat("\n SEVERE multicollinearity (VIF > ", VIF_SEVERE, "):\n")
   print(vif_values[vif_values > VIF_SEVERE])
 } else if (any(vif_values > VIF_MODERATE)) {
-  cat("\n⚠ Moderate multicollinearity (VIF > ", VIF_MODERATE, "):\n")
+  cat("\n Moderate multicollinearity (VIF > ", VIF_MODERATE, "):\n")
   print(vif_values[vif_values > VIF_MODERATE])
 } else {
   log_step(paste("No problematic multicollinearity (all VIF <", VIF_MODERATE, ")"))
@@ -1501,8 +1495,8 @@ log_step("CR plots saved (check pink vs blue line deviation)")
 dw_test <- car::durbinWatsonTest(model4)
 cat("DW =", round(dw_test$dw, 3), "| p =", format_p(dw_test$p), "\n")
 cat(ifelse(dw_test$dw > 1.5 & dw_test$dw < 2.5,
-           "✓ Independence satisfied (DW ≈ 2)\n",
-           "⚠ Potential autocorrelation\n"))
+           "Independence satisfied (DW ≈ 2)\n",
+           "Potential autocorrelation\n"))
 
 # ---- 9.3 Homoscedasticity ----
 
@@ -1512,7 +1506,7 @@ bp_test <- lmtest::bptest(model4)
 cat("BP =", round(bp_test$statistic, 3), "| p =", format_p(bp_test$p.value), "\n")
 
 if (bp_test$p.value < 0.05) {
-  cat("⚠ Heteroscedasticity detected — see robust SEs in Step 10\n")
+  cat("Heteroscedasticity detected — see robust SEs in Step 10\n")
 } else {
   log_step("Homoscedasticity satisfied")
 }
@@ -1647,7 +1641,7 @@ log_step("Assumption summary saved")
 
 # ---- 10.1 Exclude Influential Cases ----
 
-cat("\n--- Sensitivity: Excluding Influential Cases ---\n\n")
+# Sensitivity: Excluding Influential Cases
 
 influential_cases <- which(influence_stats$cooks_d > cooks_cutoff)
 
@@ -1686,7 +1680,7 @@ if (length(influential_cases) > 0 & length(influential_cases) < nrow(regression_
 } else if (length(influential_cases) == 0) {
   log_step("No influential cases — robust analysis not needed")
 } else {
-  cat("⚠ Too many influential cases (>5%) — examine data quality\n")
+  cat("Too many influential cases (>5%) — examine data quality\n")
 }
 
 # ---- 10.2 Robust Standard Errors ----
@@ -1727,7 +1721,7 @@ if (nrow(data_male) >= 100 & nrow(data_female) >= 100) {
     }
   }
 } else {
-  cat("⚠ Insufficient N in one or both groups for subgroup analysis\n")
+  cat("Insufficient N in one or both groups for subgroup analysis\n")
 }
 
 # ---- 10.4 Subgroup: Age Groups ----
@@ -2001,7 +1995,7 @@ log_step("Completion log saved")
 
 # ANALYSIS COMPLETE
 
-cat("\nSummary:\n")
+# Summary:
 cat("  Cleaned", n_final, "cases from", nrow(gcbs_raw), "raw observations\n")
 cat("  GCBS reliability: α =", round(alpha_result$total$std.alpha, 3),
     "| ω =", round(omega_result$omega.tot, 3), "\n")
@@ -2016,16 +2010,12 @@ cat("  Figures:       ", here("output", "figures"), "\n")
 cat("  Models:        ", here("output", "models"), "\n")
 cat("  Documentation: ", here("documentation"), "\n\n")
 
-cat("Next steps:\n")
-cat("  1. Review diagnostic plots\n")
-cat("  2. Write up results using the template\n")
-cat("  3. Interpret suppression effects theoretically\n")
-cat("  4. Prepare manuscript tables and figures\n")
+# Next steps:
+# 1. Review diagnostic plots
+# 2. Write up results using the template
+# 3. Interpret suppression effects theoretically
+# 4. Prepare manuscript tables and figures
 
-cat("\n")
-hr("=", 80)
-cat("End of Script\n")
-hr("=", 80)
+# End of Script
 
 # ---- END OF GCBS CONSPIRACY BELIEFS ANALYSIS ----
->>>>>>> 88a881d7d667ae7d0908edd49cc43180187a279d
