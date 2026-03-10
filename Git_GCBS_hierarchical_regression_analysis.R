@@ -732,3 +732,24 @@ categorical_combined <- (edu_box + gender_box) / (urban_box + religion_box) +
 ggsave(here("output", "figures", "05_categorical_predictors_boxplots.png"),
        categorical_combined, width = 12, height = 10, dpi = 300)
 log_step("Categorical predictor plots saved")
+
+# ---- 4.6 Publication-Quality Descriptive Table ----
+
+desc_table <- gcbs_analysis %>%
+  dplyr::select(gcbs_total, all_of(continuous_vars)) %>%
+  psych::describe() %>%
+  as.data.frame() %>%
+  dplyr::select(n, mean, sd, min, max) %>%
+  rownames_to_column("Variable") %>%
+  mutate(
+    Variable = predictor_labels[Variable],
+    across(where(is.numeric), ~ round(., 2))
+  )
+
+write_csv(desc_table, here("output", "tables", "02_descriptive_statistics.csv"))
+
+kable(desc_table, caption = "Table 1. Descriptive Statistics for Key Variables") %>%
+  kable_styling(bootstrap_options = c("striped", "hover")) %>%
+  save_kable(here("output", "tables", "02_descriptive_statistics.html"))
+
+log_step("Descriptive statistics table saved")
