@@ -784,3 +784,20 @@ cat("\nReliability is",
            ifelse(alpha_val >= 0.80, "Good (α ≥ .80)",
                   ifelse(alpha_val >= 0.70, "Acceptable (α ≥ .70)",
                          "Questionable (α < .70)"))), "\n")
+
+# ---- 5.2 Item-Total Correlations ----
+
+# Item-Total Correlations
+# Items with r < .30 may be problematic
+
+item_total <- alpha_result$item.stats %>%
+  dplyr::select(raw.r, std.r, `r.cor`, `r.drop`) %>%
+  round(3)
+print(item_total)
+
+problematic <- which(item_total$r.cor < 0.30)
+if (length(problematic) > 0) {
+  cat("\n Items with corrected r < .30:", names(problematic), "\n")
+} else {
+  log_step("All items show adequate item-total correlations (r ≥ .30)")
+}
