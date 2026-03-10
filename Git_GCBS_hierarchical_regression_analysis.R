@@ -607,3 +607,19 @@ cat("Skewness:", ifelse(abs(gcbs_desc$Skewness) < 0.5, "Minimal",
                         ifelse(abs(gcbs_desc$Skewness) < 1, "Moderate", "Severe")), "\n")
 cat("Kurtosis:", ifelse(abs(gcbs_desc$Kurtosis) < 0.5, "Minimal",
                         ifelse(abs(gcbs_desc$Kurtosis) < 1, "Moderate", "Severe")), "\n")
+
+# ---- 4.2 Continuous Predictors ----
+
+continuous_vars <- c("extraversion", "agreeableness", "conscientiousness",
+                     "emotional_stability", "openness", "vocab_score", "age")
+
+cat("\n\nCONTINUOUS PREDICTORS\n")
+hr("-", 50)
+
+continuous_desc <- gcbs_analysis %>%
+  dplyr::select(all_of(continuous_vars)) %>%
+  psych::describe() %>%
+  as.data.frame() %>%
+  dplyr::select(n, mean, sd, median, min, max, skew, kurtosis, se) %>%
+  round(2)
+print(continuous_desc)
