@@ -623,3 +623,15 @@ continuous_desc <- gcbs_analysis %>%
   dplyr::select(n, mean, sd, median, min, max, skew, kurtosis, se) %>%
   round(2)
 print(continuous_desc)
+
+# ---- 4.3 Categorical Predictors ----
+
+cat("\n\nCATEGORICAL PREDICTORS\n")
+hr("-", 50)
+
+describe_categorical(gcbs_analysis, "gender_factor",     "Gender")
+describe_categorical(gcbs_analysis, "education_factor",  "Education")
+describe_categorical(gcbs_analysis, "urban_factor",      "Urban/Rural Background")
+describe_categorical(gcbs_analysis, "english_native",    "English Native Speaker")
+describe_categorical(gcbs_analysis, "voted_factor",      "Voted in Past Year")
+describe_categorical(gcbs_analysis, "religion_collapsed", "Religion (Collapsed)")
